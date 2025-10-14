@@ -1,13 +1,32 @@
-[gd_scene load_steps=3 format=3 uid="uid://bhp02oy73u0b5"]
+[gd_scene load_steps=6 format=3 uid="uid://bhp02oy73u0b5"]
 
 [ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movebit.gd" id="2_0wfyh"]
+[ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movemaster2d.gd" id="2_0wfyh"]
+[ext_resource type="Script" uid="uid://dm0cvcckbo1ha" path="res://scripts/bits/movebits/control_bits/float_control.gd" id="3_sugp2"]
+
+[sub_resource type="Gradient" id="Gradient_0wfyh"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_sugp2"]
+gradient = SubResource("Gradient_0wfyh")
 
 [node name="Main" type="Node"]
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(31, 12.999985)
+scale = Vector2(17.40625, 9.34375)
+texture = SubResource("GradientTexture2D_sugp2")
 
 [node name="Player" type="Node2D" parent="."]
 script = ExtResource("1_o5qli")
 
-[node name="MoveBit" type="Node" parent="."]
+[node name="MoveMaster" type="CharacterBody2D" parent="Player"]
+motion_mode = 1
 script = ExtResource("2_0wfyh")
-metadata/_custom_type_script = "uid://ce0lih35lp5ov"
+
+[node name="FloatControlBit" type="Node" parent="Player/MoveMaster"]
+script = ExtResource("3_sugp2")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = SubResource("GradientTexture2D_sugp2")
+
+[node name="Camera2D" type="Camera2D" parent="."]
