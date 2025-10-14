@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhp02oy73u0b5"]
+
+[ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movebit.gd" id="2_0wfyh"]
+
+[node name="Main" type="Node"]
+
+[node name="Player" type="Node2D" parent="."]
+script = ExtResource("1_o5qli")
+
+[node name="MoveBit" type="Node" parent="."]
+script = ExtResource("2_0wfyh")
+metadata/_custom_type_script = "uid://ce0lih35lp5ov"
