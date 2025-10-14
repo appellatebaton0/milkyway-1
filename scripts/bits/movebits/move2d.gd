@@ -1,11 +1,12 @@
-extends Node
+@abstract class_name MoveBit2D extends MoveBit
 
+## The state machine this belongs to.
+@onready var master:MoveMasterBit2D = get_master()
+func get_master() -> MoveMasterBit2D:
+	var parent = get_parent()
+	if parent is MoveMasterBit2D:
+		return parent
+	return null
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func vec2_move_towards(from:Vector2, to:Vector2, delta:float):
+	return Vector2(move_toward(from.x, to.x, delta), move_toward(from.y, to.y, delta))

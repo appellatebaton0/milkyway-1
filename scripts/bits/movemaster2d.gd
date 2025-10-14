@@ -4,6 +4,29 @@ class_name MoveMasterBit2D extends Bit
 
 @export var mover:CharacterBody2D
 
+var direction_x := -1.0 ## A float locked to -1.0, 0.0, 1.0
+func set_direction_x(to:float):
+	if to == 0:
+		direction_x = 0
+		return
+	
+	# Set it to -1 if negative, 1 if positive.
+	direction_x = to / abs(to)
+var direction_y := -1.0 ## A float locked to -1.0, 0.0, 1.0
+func set_direction_y(to:float):
+	if to == 0:
+		direction_y = 0
+		return
+	
+	# Set it to -1 if negative, 1 if positive.
+	direction_y = to / abs(to)
+
+func get_direction() -> Vector2:
+	return Vector2(direction_x, direction_y)
+func set_direction(to:Vector2):
+	set_direction_x(to.x)
+	set_direction_y(to.y)
+
 @export var initial_bit:MoveBit
 var current_bit:MoveBit
 

@@ -2,18 +2,16 @@ class_name FloatControlBit extends ControlBit
 ## Allows for controlling the Bot like it's floating. (Top down)
 ## NOTE: Make sure the CharacterBody is on the Floating motion_mode.
 
-func on_active() -> void:
-	pass
-func on_inactive() -> void:
-	pass
+## How fast the bot approaches max speed, per second.
+@export var acceleration := 30.0
+## The fastest the bot can go like this.
+@export var max_speed := 90.0
 
-func active(_delta:float) -> void:
-	pass
-func inactive(_delta:float) -> void:
-	pass
-
-func phys_active(_delta:float) -> void:
+func phys_active(delta:float) -> void:
 	
-	pass
-func phys_inactive(_delta:float) -> void:
-	pass
+	# Update the directions.
+	master.set_direction_x(Input.get_axis(inputs[inp.left], inputs[inp.right]))
+	master.set_direction_y(Input.get_axis(inputs[inp.up], inputs[inp.down]))
+	
+	# Apply the velocity
+	master.mover.velocity = vec2_move_towards(master.mover.velocity, master.get_direction() * max_speed, delta * acceleration)

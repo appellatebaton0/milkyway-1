@@ -1,4 +1,4 @@
-@abstract class_name ControlBit extends MoveBit
+@abstract class_name ControlBit extends MoveBit2D
 ## A MoveBit that allows player control, with throughput for inputs.
 
 enum inp{
