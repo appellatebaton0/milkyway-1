@@ -1,11 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://bhp02oy73u0b5"]
+[gd_scene load_steps=16 format=3 uid="uid://bhp02oy73u0b5"]
 
 [ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movemaster2d.gd" id="2_0wfyh"]
 [ext_resource type="Script" uid="uid://dm0cvcckbo1ha" path="res://scripts/bits/movebits/control_bits/float_control.gd" id="3_sugp2"]
-[ext_resource type="Script" uid="uid://dh7uyas6k0ivv" path="res://scripts/bits/movebits/lerp2d.gd" id="4_jyhfs"]
+[ext_resource type="Script" uid="uid://dh7uyas6k0ivv" path="res://scripts/bits/movebits/position2d.gd" id="4_jyhfs"]
+[ext_resource type="Script" uid="uid://cf8yvwn7y5dxj" path="res://scripts/values/vector2/operation_vec2.gd" id="4_trceg"]
+[ext_resource type="Script" uid="uid://dhiqy1na7pbxt" path="res://scripts/values/vector2/lerp_vec2.gd" id="5_o6xl0"]
 [ext_resource type="Script" uid="uid://b1o48vkwquyxs" path="res://scripts/values/node/manual_node.gd" id="5_tefeu"]
 [ext_resource type="Script" uid="uid://cv1nebo3jeb7b" path="res://scripts/values/vector2/manual_vec2.gd" id="6_o6xl0"]
+[ext_resource type="Script" uid="uid://bwdw5vkktfk76" path="res://scripts/values/vector2/position_vec2.gd" id="6_tipki"]
+[ext_resource type="Script" uid="uid://dpdrlpfc562ev" path="res://scripts/values/vector2/cast_vec2.gd" id="9_ya4ey"]
+[ext_resource type="Script" uid="uid://d7n7ctdl2nsg" path="res://scripts/values/property.gd" id="10_eb6dy"]
+[ext_resource type="Script" uid="uid://4ivi36601ppp" path="res://scripts/values/node/bit_node.gd" id="11_trceg"]
+[ext_resource type="Script" uid="uid://bslmamakq2ao5" path="res://scripts/values/node/group_node.gd" id="12_eb6dy"]
 
 [sub_resource type="Gradient" id="Gradient_0wfyh"]
 
@@ -19,7 +26,7 @@ position = Vector2(31, 12.999985)
 scale = Vector2(17.40625, 9.34375)
 texture = SubResource("GradientTexture2D_sugp2")
 
-[node name="Player" type="Node2D" parent="."]
+[node name="Player" type="Node2D" parent="." groups=["Player"]]
 script = ExtResource("1_o5qli")
 
 [node name="MoveMaster" type="CharacterBody2D" parent="Player"]
@@ -34,26 +41,69 @@ max_speed = 500.0
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 texture = SubResource("GradientTexture2D_sugp2")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera" type="Node2D" parent="." groups=["Camera"]]
 script = ExtResource("1_o5qli")
 
-[node name="MoveMaster" type="CharacterBody2D" parent="Camera2D"]
+[node name="MoveMaster" type="CharacterBody2D" parent="Camera"]
 script = ExtResource("2_0wfyh")
 
-[node name="Node" type="Node" parent="Camera2D/MoveMaster"]
+[node name="SetPosition" type="Node" parent="Camera/MoveMaster"]
 script = ExtResource("4_jyhfs")
 
-[node name="A" type="Node" parent="Camera2D/MoveMaster/Node" node_paths=PackedStringArray("response")]
+[node name="Next" type="Node" parent="Camera/MoveMaster/SetPosition"]
+script = ExtResource("4_trceg")
+metadata/_custom_type_script = "uid://cf8yvwn7y5dxj"
+
+[node name="LesserVelocity" type="Node" parent="Camera/MoveMaster/SetPosition/Next"]
+script = ExtResource("4_trceg")
+operation = 2
+metadata/_custom_type_script = "uid://cf8yvwn7y5dxj"
+
+[node name="PlayerVelocity" type="Node" parent="Camera/MoveMaster/SetPosition/Next/LesserVelocity"]
+script = ExtResource("9_ya4ey")
+metadata/_custom_type_script = "uid://dpdrlpfc562ev"
+
+[node name="Velocity" type="Node" parent="Camera/MoveMaster/SetPosition/Next/LesserVelocity/PlayerVelocity"]
+script = ExtResource("10_eb6dy")
+property = "velocity"
+metadata/_custom_type_script = "uid://d7n7ctdl2nsg"
+
+[node name="MoveMaster" type="Node" parent="Camera/MoveMaster/SetPosition/Next/LesserVelocity/PlayerVelocity/Velocity"]
+script = ExtResource("11_trceg")
+bit_id = "MoveMasterBit2D"
+metadata/_custom_type_script = "uid://4ivi36601ppp"
+
+[node name="Player" type="Node" parent="Camera/MoveMaster/SetPosition/Next/LesserVelocity/PlayerVelocity/Velocity/MoveMaster"]
+script = ExtResource("12_eb6dy")
+group_name = "Player"
+metadata/_custom_type_script = "uid://bslmamakq2ao5"
+
+[node name="Divisor" type="Node" parent="Camera/MoveMaster/SetPosition/Next/LesserVelocity"]
+script = ExtResource("6_o6xl0")
+response = Vector2(20, 20)
+metadata/_custom_type_script = "uid://cv1nebo3jeb7b"
+
+[node name="Lerp" type="Node" parent="Camera/MoveMaster/SetPosition/Next"]
+script = ExtResource("5_o6xl0")
+metadata/_custom_type_script = "uid://dhiqy1na7pbxt"
+
+[node name="APosition" type="Node" parent="Camera/MoveMaster/SetPosition/Next/Lerp"]
+script = ExtResource("6_tipki")
+metadata/_custom_type_script = "uid://bwdw5vkktfk76"
+
+[node name="A" type="Node" parent="Camera/MoveMaster/SetPosition/Next/Lerp/APosition" node_paths=PackedStringArray("response")]
 script = ExtResource("5_tefeu")
-response = NodePath("../../..")
+response = NodePath("../../../../../..")
 metadata/_custom_type_script = "uid://b1o48vkwquyxs"
 
-[node name="B" type="Node" parent="Camera2D/MoveMaster/Node" node_paths=PackedStringArray("response")]
-script = ExtResource("5_tefeu")
-response = NodePath("../../../../Player")
-metadata/_custom_type_script = "uid://b1o48vkwquyxs"
+[node name="BPosition" type="Node" parent="Camera/MoveMaster/SetPosition/Next/Lerp" node_paths=PackedStringArray("node")]
+script = ExtResource("6_tipki")
+node = NodePath("../../LesserVelocity/PlayerVelocity/Velocity/MoveMaster/Player")
+metadata/_custom_type_script = "uid://bwdw5vkktfk76"
 
-[node name="Lerp" type="Node" parent="Camera2D/MoveMaster/Node"]
+[node name="Lerp" type="Node" parent="Camera/MoveMaster/SetPosition/Next/Lerp"]
 script = ExtResource("6_o6xl0")
 response = Vector2(0.4, 0.4)
 metadata/_custom_type_script = "uid://cv1nebo3jeb7b"
+
+[node name="Camera2D" type="Camera2D" parent="Camera"]
