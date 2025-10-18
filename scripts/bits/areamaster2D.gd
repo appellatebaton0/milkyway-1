@@ -11,7 +11,7 @@ func get_area() -> Area2D:
 		return parent
 	
 	return null
-var area:Area2D = get_area()
+@onready var area:Area2D = get_area()
 
 ## Compares two ints to see if their binary matches, pretty much.
 ## Effectively, lets you plug in a collision_layer and collision_mask to see if they collide.
@@ -30,8 +30,8 @@ func layer_match(layer:int, mask:int) -> bool:
 	return false # If no matches were found, return false :(
 
 ## Mask an array of collision objects to just the ones that match a mask.
-func mask_objects(objects:Array[CollisionObject2D], mask:int) -> Array[CollisionObject2D]:
-	var response:Array[CollisionObject2D]
+func mask_objects(objects:Array[CollisionObject2D], mask:int) -> Array[Node]:
+	var response:Array[Node]
 	
 	for object in objects:
 		if layer_match(object.collision_layer, mask):
@@ -75,29 +75,42 @@ func _ready() -> void:
 		area.body_exited.connect(_on_body_exited)
 
 func _process(delta: float) -> void:
-	
-	# All the currently overlapping Area2Ds
-	var overlapping_areas:Array[Area2D] = area.get_overlapping_areas()
-	# All the currently overlapping PhysicsBodies and Tilesets
-	var overlapping_bodies:Array[Node2D] = area.get_overlapping_bodies()
-	
-	# Handle all the AreaBits
-	for bit in area_bits:
-		# Get the areas & bodies overlapping with this.
-		# NOTE: this will ignore Tilesets :[
-		var o_areas = mask_objects(objectify(overlapping_areas), bit.collision_mask)
-		var o_bodies = mask_objects(objectify(overlapping_bodies), bit.collision_mask)
+	if area != null:
+		# All the currently overlapping Area2Ds
+		var overlapping_areas:Array[Area2D] = area.get_overlapping_areas()
+		# All the currently overlapping PhysicsBodies and Tilesets
+		var overlapping_bodies:Array[Node2D] = area.get_overlapping_bodies()
 		
-		# Pass them on to the relevant functions, along with delta :)
-		bit.while_overlapping_areas(o_areas, delta)
-		bit.while_overlapping_bodies(o_bodies, delta)
+		# Handle all the AreaBits
+		for bit in area_bits:
+			# Get the areas & bodies overlapping with this.
+			# NOTE: this will ignore Tilesets :[
+			var o_areas = mask_objects(objectify(overlapping_areas), bit.collision_mask)
+			var o_bodies = mask_objects(objectify(overlapping_bodies), bit.collision_mask)
+			
+			# Pass them on to the relevant functions, along with delta :)
+			bit.while_overlapping_areas(o_areas, delta)
+			bit.while_overlapping_bodies(o_bodies, delta)
 
+## When an area enters, tell any bits that are listening (have the right mask)
 func _on_area_entered(area_in:Area2D):
-	pass
+	for bit in area_bits:
+		if layer_match(area_in.collision_layer, bit.collision_mask):
+			bit.on_area_entered(area_in)
+			bit.area
+## When a body enters, tell any bits that are listening (have the right mask)
 func _on_body_entered(body_in: Node2D):
-	pass
+	for bit in area_bits:
+		if layer_match(body_in.collision_layer, bit.collision_mask):
+			bit.on_body_entered(body_in)
 
+## When an area leaves, tell any bits that are listening (have the right mask)
 func _on_area_exited(area_out:Area2D):
-	pass
+	for bit in area_bits:
+		if layer_match(area_out.collision_layer, bit.collision_mask):
+			bit.on_area_exited(area_out)
+## When a body leaves, tell any bits that are listening (have the right mask)
 func _on_body_exited(body_out:Node2D):
-	pass
+	for bit in area_bits:
+		if layer_match(body_out.collision_layer, bit.collision_mask):
+			bit.on_body_exited(body_out)

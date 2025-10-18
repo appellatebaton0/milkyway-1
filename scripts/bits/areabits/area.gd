@@ -1,6 +1,11 @@
 @abstract class_name AreaBit extends Bit
 ## Provides functionality to be run by an AreaMaster, with its own mask that has to be met ALONGSIDE the one from the AreaMaster.
 
+@warning_ignore("unused_signal") signal area_entered ## Emitted when an area enters this AreaBit
+@warning_ignore("unused_signal") signal body_entered ## Emitted when a body enters this AreaBit
+@warning_ignore("unused_signal") signal area_exited ## Emitted when an area exits this AreaBit
+@warning_ignore("unused_signal") signal body_exited ## Emitted when a body exits this AreaBit
+
 ## Run when a body / area enters the Master
 func on_body_entered(_body:Node) -> void:
 	pass

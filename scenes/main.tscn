@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bhp02oy73u0b5"]
+[gd_scene load_steps=21 format=3 uid="uid://bhp02oy73u0b5"]
 
 [ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movemaster2d.gd" id="2_a8y0u"]
@@ -23,6 +23,9 @@
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_sugp2"]
 gradient = SubResource("Gradient_0wfyh")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_muem4"]
+size = Vector2(64, 64)
+
 [node name="Main" type="Node"]
 
 [node name="Sprite2D2" type="Sprite2D" parent="."]
@@ -43,6 +46,9 @@ rotation_max_speed = 115.872
 rotation_acceleration = 300.0
 move_max_speed = 500.0
 move_acceleration = 350.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/MoveMaster"]
+shape = SubResource("RectangleShape2D_muem4")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 texture = SubResource("GradientTexture2D_sugp2")
