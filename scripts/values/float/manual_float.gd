@@ -1,5 +1,5 @@
 class_name ManualFloat extends FloatValue
-## What do I do?
+## Returns a given float.
 
 ## The float to return.
 @export var response := 0.0

@@ -1,5 +1,5 @@
 class_name ManualNode extends NodeValue
-## Returns a given Node
+## Returns a given Node.
 
 ## The node to return.
 @export var response:Node

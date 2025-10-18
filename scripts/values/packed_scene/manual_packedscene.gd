@@ -1,6 +1,7 @@
 class_name ManualPackedScene extends PackedSceneValue
-## Responds with a given PackedScene
+## Returns a given PackedScene.
 
+## The PackedScene to respond with.
 @export var response:PackedScene
 
 func value() -> PackedScene:

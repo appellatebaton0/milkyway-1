@@ -10,7 +10,14 @@ class_name SpawnerBit extends Bit
 ## The rotation to spawn the nodes with (degrees).
 @export var spawn_rotation:FloatValue
 
+## The interval between spawns.
+@export var interval:FloatValue
+var current_interval := -1.0 ## The current interval. When the timer reaches this, it's updated by [interval] and the timer is reset.
+var timer := 0.0
 
+## Sets a limit on how many times the node can be spawned; -1 is infinite.
+@export var spawn_limit := -1
+var spawns := 0
 
 ## Attempt to create and return a new node.
 func spawn_new() -> Node:
@@ -60,3 +67,29 @@ func spawn_new() -> Node:
 		new.rotation = rotation_v
 	
 	return new
+
+## Try to get a new interval.
+func renew_interval() -> void:
+	if interval != null:
+		var val = interval.value()
+		if val != null:
+			current_interval = val
+
+func _ready() -> void:
+	renew_interval()
+	
+	timer = current_interval
+
+func _process(delta: float) -> void:
+	
+	if current_interval >= 0: # If a valid interval exists
+		
+		timer = move_toward(timer, 0, delta)
+		
+		if timer <= 0:
+			spawn_new()
+			
+			renew_interval()
+			
+			timer = current_interval
+		

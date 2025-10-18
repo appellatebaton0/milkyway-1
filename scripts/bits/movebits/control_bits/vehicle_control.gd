@@ -50,8 +50,7 @@ func phys_active(delta:float) -> void:
 	if bot.is_class("Node2D"):
 		bot.rotate(deg_to_rad(rotation_speed * delta))
 		
-		if abs(move_speed) > abs(master.mover.velocity.y):
-			master.mover.velocity = Vector2(0, move_speed).rotated(bot.rotation)
+		master.mover.velocity = Vector2(0, move_speed).rotated(bot.rotation)
 
 	
 func phys_inactive(_delta:float) -> void:
