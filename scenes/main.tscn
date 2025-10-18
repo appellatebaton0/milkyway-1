@@ -1,14 +1,18 @@
-[gd_scene load_steps=21 format=3 uid="uid://bhp02oy73u0b5"]
+[gd_scene load_steps=25 format=3 uid="uid://bhp02oy73u0b5"]
 
 [ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_o5qli"]
 [ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movemaster2d.gd" id="2_a8y0u"]
+[ext_resource type="Script" uid="uid://c7kkv1iuav8gk" path="res://scripts/bits/value.gd" id="4_dp3eg"]
 [ext_resource type="Script" uid="uid://cjub2h8aynu37" path="res://scripts/bits/movebits/control_bits/vehicle_control.gd" id="4_jkv2x"]
 [ext_resource type="Script" uid="uid://dh7uyas6k0ivv" path="res://scripts/bits/movebits/position2d.gd" id="4_jyhfs"]
 [ext_resource type="Script" uid="uid://cf8yvwn7y5dxj" path="res://scripts/values/vector2/operation_vec2.gd" id="4_trceg"]
+[ext_resource type="Script" uid="uid://bc87fqj83okns" path="res://scripts/bits/property_modifier.gd" id="5_gqmmt"]
 [ext_resource type="Script" uid="uid://dhiqy1na7pbxt" path="res://scripts/values/vector2/lerp_vec2.gd" id="5_o6xl0"]
 [ext_resource type="Script" uid="uid://b1o48vkwquyxs" path="res://scripts/values/node/manual_node.gd" id="5_tefeu"]
 [ext_resource type="Script" uid="uid://cv1nebo3jeb7b" path="res://scripts/values/vector2/manual_vec2.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://bwdw5vkktfk76" path="res://scripts/values/vector2/position_vec2.gd" id="6_tipki"]
+[ext_resource type="Script" uid="uid://bxl20cm7r57lo" path="res://scripts/values/string/concat_string.gd" id="7_jscy8"]
+[ext_resource type="Script" uid="uid://64djo1ycff7k" path="res://scripts/values/bit.gd" id="7_yc10j"]
 [ext_resource type="Script" uid="uid://dpdrlpfc562ev" path="res://scripts/values/vector2/cast_vec2.gd" id="9_ya4ey"]
 [ext_resource type="Script" path="res://scripts/values/property.gd" id="10_eb6dy"]
 [ext_resource type="Script" uid="uid://4ivi36601ppp" path="res://scripts/values/node/bit_node.gd" id="11_trceg"]
@@ -52,6 +56,41 @@ shape = SubResource("RectangleShape2D_muem4")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 texture = SubResource("GradientTexture2D_sugp2")
+
+[node name="Stamina" type="Node" parent="Player"]
+script = ExtResource("4_dp3eg")
+id = "Stamina"
+value = 0.0
+
+[node name="Label" type="Label" parent="Player"]
+offset_left = -25.0
+offset_top = -64.0
+offset_right = 15.0
+offset_bottom = -41.0
+
+[node name="Node" type="Node" parent="Player/Label"]
+script = ExtResource("5_gqmmt")
+property = "text"
+constant = true
+
+[node name="ManualNode" type="Node" parent="Player/Label/Node" node_paths=PackedStringArray("response")]
+script = ExtResource("5_tefeu")
+response = NodePath("../..")
+metadata/_custom_type_script = "uid://b1o48vkwquyxs"
+
+[node name="ConcatString" type="Node" parent="Player/Label/Node"]
+script = ExtResource("7_jscy8")
+metadata/_custom_type_script = "uid://bxl20cm7r57lo"
+
+[node name="BitValue" type="Node" parent="Player/Label/Node/ConcatString"]
+script = ExtResource("7_yc10j")
+id = "Stamina"
+metadata/_custom_type_script = "uid://64djo1ycff7k"
+
+[node name="ManualNode" type="Node" parent="Player/Label/Node/ConcatString/BitValue" node_paths=PackedStringArray("response")]
+script = ExtResource("5_tefeu")
+response = NodePath("../../../../..")
+metadata/_custom_type_script = "uid://b1o48vkwquyxs"
 
 [node name="Camera" type="Node2D" parent="." groups=["Camera"]]
 script = ExtResource("1_o5qli")

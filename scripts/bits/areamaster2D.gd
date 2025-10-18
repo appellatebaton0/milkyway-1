@@ -97,20 +97,23 @@ func _on_area_entered(area_in:Area2D):
 	for bit in area_bits:
 		if layer_match(area_in.collision_layer, bit.collision_mask):
 			bit.on_area_entered(area_in)
-			bit.area
+			bit.area_entered.emit()
 ## When a body enters, tell any bits that are listening (have the right mask)
 func _on_body_entered(body_in: Node2D):
 	for bit in area_bits:
 		if layer_match(body_in.collision_layer, bit.collision_mask):
 			bit.on_body_entered(body_in)
+			bit.body_entered.emit()
 
 ## When an area leaves, tell any bits that are listening (have the right mask)
 func _on_area_exited(area_out:Area2D):
 	for bit in area_bits:
 		if layer_match(area_out.collision_layer, bit.collision_mask):
 			bit.on_area_exited(area_out)
+			bit.area_exited.emit()
 ## When a body leaves, tell any bits that are listening (have the right mask)
 func _on_body_exited(body_out:Node2D):
 	for bit in area_bits:
 		if layer_match(body_out.collision_layer, bit.collision_mask):
 			bit.on_body_exited(body_out)
+			bit.body_exited.emit()

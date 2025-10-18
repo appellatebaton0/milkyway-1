@@ -1,9 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://chtyhmq2k76yo"]
+[gd_scene load_steps=11 format=3 uid="uid://chtyhmq2k76yo"]
 
 [ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_md0e3"]
 [ext_resource type="Texture2D" uid="uid://b8upwo8oqabtb" path="res://icon.svg" id="2_4ra3w"]
 [ext_resource type="Script" uid="uid://dx6xpuy57uxvg" path="res://scripts/bits/areamaster2D.gd" id="3_4ra3w"]
 [ext_resource type="Script" uid="uid://hg8o6oww1p4g" path="res://scripts/bits/value_modifier.gd" id="4_5uy6h"]
+[ext_resource type="Script" uid="uid://bslmamakq2ao5" path="res://scripts/values/node/group_node.gd" id="5_xwavj"]
+[ext_resource type="Script" uid="uid://cae7ohv2js782" path="res://scripts/values/float/modified_float.gd" id="6_ipns3"]
+[ext_resource type="Script" uid="uid://64djo1ycff7k" path="res://scripts/values/bit.gd" id="6_nenq2"]
+[ext_resource type="Script" uid="uid://bdjqjjp8vifaj" path="res://scripts/values/float/cast_float.gd" id="7_8qclf"]
+[ext_resource type="Script" uid="uid://dc8sod06feafh" path="res://scripts/values/float/manual_float.gd" id="9_w8i8w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5uy6h"]
 size = Vector2(128, 128)
@@ -15,6 +20,7 @@ script = ExtResource("1_md0e3")
 texture = ExtResource("2_4ra3w")
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
 
 [node name="AreaMasterBit" type="Node" parent="Area2D"]
 script = ExtResource("3_4ra3w")
@@ -22,5 +28,36 @@ script = ExtResource("3_4ra3w")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_5uy6h")
 
-[node name="Node" type="Node" parent="."]
+[node name="UpdateStamina" type="Node" parent="." node_paths=PackedStringArray("target", "new_value")]
 script = ExtResource("4_5uy6h")
+target = NodePath("GetPlayer")
+value_id = "Stamina"
+new_value = NodePath("Add10")
+
+[node name="GetPlayer" type="Node" parent="UpdateStamina"]
+script = ExtResource("5_xwavj")
+group_name = "Player"
+metadata/_custom_type_script = "uid://bslmamakq2ao5"
+
+[node name="Add10" type="Node" parent="UpdateStamina"]
+script = ExtResource("6_ipns3")
+metadata/_custom_type_script = "uid://cae7ohv2js782"
+
+[node name="StaminaFloat" type="Node" parent="UpdateStamina/Add10"]
+script = ExtResource("7_8qclf")
+metadata/_custom_type_script = "uid://bdjqjjp8vifaj"
+
+[node name="GetStamina" type="Node" parent="UpdateStamina/Add10/StaminaFloat" node_paths=PackedStringArray("bot")]
+script = ExtResource("6_nenq2")
+bot = NodePath("../../../GetPlayer")
+id = "Stamina"
+
+[node name="10" type="Node" parent="UpdateStamina/Add10"]
+script = ExtResource("9_w8i8w")
+response = 10.0
+metadata/_custom_type_script = "uid://dc8sod06feafh"
+
+[connection signal="area_entered" from="Area2D" to="." method="bot_free_val"]
+[connection signal="area_entered" from="Area2D" to="UpdateStamina" method="modify_val"]
+[connection signal="body_entered" from="Area2D" to="." method="bot_free_val"]
+[connection signal="body_entered" from="Area2D" to="UpdateStamina" method="modify_val"]

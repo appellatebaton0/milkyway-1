@@ -8,6 +8,10 @@ class_name ValueModifierBit extends Bit
 ## The value to change it to.
 @export var new_value:Value
 
+## For signals that are STUPID.
+func modify_val(_value):
+	modify()
+
 ## Can be attached to signals >:)
 func modify():
 	if target != null and new_value != null:
