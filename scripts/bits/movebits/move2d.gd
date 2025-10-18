@@ -1,4 +1,5 @@
 @abstract class_name MoveBit2D extends MoveBit
+## A MoveBit that's specifically 2D
 
 ## The state machine this belongs to.
 @onready var master:MoveMasterBit2D = get_master()
