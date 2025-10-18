@@ -2,7 +2,21 @@ class_name MoveMasterBit2D extends Bit
 ## Meant for a CharacterBody, provides a basis for movement
 ## This is a state machine!
 
-@export var mover:CharacterBody2D
+@onready var mover:CharacterBody2D = get_mover()
+func get_mover() -> CharacterBody2D:
+	
+	## If SELF works, return that.
+	var me = self
+	if me is CharacterBody2D:
+		return me
+	
+	## Otherwise, try the parent.
+	var parent = get_parent()
+	if parent is CharacterBody2D:
+		return parent
+	
+	## If all else fails, return null.
+	return null
 
 var direction_x := -1.0 ## A float locked to -1.0, 0.0, 1.0
 func set_direction_x(to:float):
@@ -67,6 +81,13 @@ func _ready() -> void:
 			mover = me
 	
 	if initial_bit == null:
+		## Look in siblings
+		for sibling in get_parent().get_children():
+			if sibling is MoveBit:
+				initial_bit = sibling
+				break
+	if initial_bit == null:
+		## Look in children
 		for child in get_children():
 			if child is MoveBit:
 				initial_bit = child

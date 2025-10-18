@@ -7,6 +7,9 @@
 func get_bot() -> Bot:
 	var parent = get_parent()
 	
+	if parent is Bit:
+		return parent.get_bot()
+	
 	if parent is Bot:
 		return parent
 	

@@ -1,8 +1,8 @@
-[gd_scene load_steps=16 format=3 uid="uid://bhp02oy73u0b5"]
+[gd_scene load_steps=17 format=3 uid="uid://bhp02oy73u0b5"]
 
 [ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_o5qli"]
-[ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movemaster2d.gd" id="2_0wfyh"]
-[ext_resource type="Script" uid="uid://dm0cvcckbo1ha" path="res://scripts/bits/movebits/control_bits/float_control.gd" id="3_sugp2"]
+[ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movemaster2d.gd" id="2_a8y0u"]
+[ext_resource type="Script" uid="uid://cjub2h8aynu37" path="res://scripts/bits/movebits/control_bits/vehicle_control.gd" id="4_jkv2x"]
 [ext_resource type="Script" uid="uid://dh7uyas6k0ivv" path="res://scripts/bits/movebits/position2d.gd" id="4_jyhfs"]
 [ext_resource type="Script" uid="uid://cf8yvwn7y5dxj" path="res://scripts/values/vector2/operation_vec2.gd" id="4_trceg"]
 [ext_resource type="Script" uid="uid://dhiqy1na7pbxt" path="res://scripts/values/vector2/lerp_vec2.gd" id="5_o6xl0"]
@@ -10,9 +10,10 @@
 [ext_resource type="Script" uid="uid://cv1nebo3jeb7b" path="res://scripts/values/vector2/manual_vec2.gd" id="6_o6xl0"]
 [ext_resource type="Script" uid="uid://bwdw5vkktfk76" path="res://scripts/values/vector2/position_vec2.gd" id="6_tipki"]
 [ext_resource type="Script" uid="uid://dpdrlpfc562ev" path="res://scripts/values/vector2/cast_vec2.gd" id="9_ya4ey"]
-[ext_resource type="Script" uid="uid://d7n7ctdl2nsg" path="res://scripts/values/property.gd" id="10_eb6dy"]
+[ext_resource type="Script" path="res://scripts/values/property.gd" id="10_eb6dy"]
 [ext_resource type="Script" uid="uid://4ivi36601ppp" path="res://scripts/values/node/bit_node.gd" id="11_trceg"]
 [ext_resource type="Script" uid="uid://bslmamakq2ao5" path="res://scripts/values/node/group_node.gd" id="12_eb6dy"]
+[ext_resource type="Script" uid="uid://donf4y4qkpwsw" path="res://scripts/bits/spawner.gd" id="14_a8y0u"]
 
 [sub_resource type="Gradient" id="Gradient_0wfyh"]
 
@@ -31,12 +32,14 @@ script = ExtResource("1_o5qli")
 
 [node name="MoveMaster" type="CharacterBody2D" parent="Player"]
 motion_mode = 1
-script = ExtResource("2_0wfyh")
+script = ExtResource("2_a8y0u")
 
-[node name="FloatControlBit" type="Node" parent="Player/MoveMaster"]
-script = ExtResource("3_sugp2")
-acceleration = 900.0
-max_speed = 500.0
+[node name="VehicleControlBit" type="Node" parent="Player/MoveMaster"]
+script = ExtResource("4_jkv2x")
+rotation_max_speed = 115.872
+rotation_acceleration = 300.0
+move_max_speed = 500.0
+move_acceleration = 350.0
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 texture = SubResource("GradientTexture2D_sugp2")
@@ -45,7 +48,7 @@ texture = SubResource("GradientTexture2D_sugp2")
 script = ExtResource("1_o5qli")
 
 [node name="MoveMaster" type="CharacterBody2D" parent="Camera"]
-script = ExtResource("2_0wfyh")
+script = ExtResource("2_a8y0u")
 
 [node name="SetPosition" type="Node" parent="Camera/MoveMaster"]
 script = ExtResource("4_jyhfs")
@@ -66,7 +69,6 @@ metadata/_custom_type_script = "uid://dpdrlpfc562ev"
 [node name="Velocity" type="Node" parent="Camera/MoveMaster/SetPosition/Next/LesserVelocity/PlayerVelocity"]
 script = ExtResource("10_eb6dy")
 property = "velocity"
-metadata/_custom_type_script = "uid://d7n7ctdl2nsg"
 
 [node name="MoveMaster" type="Node" parent="Camera/MoveMaster/SetPosition/Next/LesserVelocity/PlayerVelocity/Velocity"]
 script = ExtResource("11_trceg")
@@ -107,3 +109,9 @@ response = Vector2(0.4, 0.4)
 metadata/_custom_type_script = "uid://cv1nebo3jeb7b"
 
 [node name="Camera2D" type="Camera2D" parent="Camera"]
+
+[node name="Spawner" type="Node2D" parent="."]
+script = ExtResource("1_o5qli")
+
+[node name="Node2D" type="Node2D" parent="Spawner"]
+script = ExtResource("14_a8y0u")
