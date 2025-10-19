@@ -16,8 +16,11 @@ var current_interval := -1.0 ## The current interval. When the timer reaches thi
 var timer := 0.0
 
 ## Sets a limit on how many times the node can be spawned; -1 is infinite.
-@export var spawn_limit := -1
-var spawns := 0
+@export var total_spawn_limit := -1
+var total_spawns := 0
+## Sets a limit on how many nodes spawned by this spawner can exist at once; -1 is infinite.
+@export var concurrent_spawn_limit := -1
+var spawns:Array[Node]
 
 ## Attempt to create and return a new node.
 func spawn_new() -> Node:
@@ -66,6 +69,9 @@ func spawn_new() -> Node:
 		new.global_position = position_v
 		new.rotation = rotation_v
 	
+	total_spawns += 1
+	spawns.append(new)
+	
 	return new
 
 ## Try to get a new interval.
@@ -75,6 +81,24 @@ func renew_interval() -> void:
 		if val != null:
 			current_interval = val
 
+func can_spawn() -> bool:
+	var real_spawns:Array[Node]
+	
+	for spawn in spawns:
+		if is_instance_valid(spawn):
+			real_spawns.append(spawn)
+
+	spawns = real_spawns
+	
+	
+	if len(spawns) >= concurrent_spawn_limit and not concurrent_spawn_limit == -1:
+		return false
+	
+	if total_spawns >= total_spawn_limit and not total_spawn_limit == -1:
+		return false
+	return true
+	
+
 func _ready() -> void:
 	renew_interval()
 	
@@ -82,7 +106,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	
-	if current_interval >= 0: # If a valid interval exists
+	if current_interval >= 0 and can_spawn(): # If a valid interval exists
 		
 		timer = move_toward(timer, 0, delta)
 		
