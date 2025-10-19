@@ -1,4 +1,4 @@
-@abstract class_name Bool extends Value
+@abstract class_name BoolValue extends Value
 ## Returns a boolean.
 
 @abstract func value() -> bool

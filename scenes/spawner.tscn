@@ -1,0 +1,31 @@
+[gd_scene load_steps=7 format=3 uid="uid://b1r46ionfq73w"]
+
+[ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_4wbs5"]
+[ext_resource type="Script" uid="uid://donf4y4qkpwsw" path="res://scripts/bits/spawner.gd" id="2_30a77"]
+[ext_resource type="Script" uid="uid://b55vjdqvt4nkj" path="res://scripts/values/packed_scene/manual_packedscene.gd" id="3_p5s3f"]
+[ext_resource type="PackedScene" uid="uid://chtyhmq2k76yo" path="res://scenes/food.tscn" id="4_e3f8v"]
+[ext_resource type="Script" uid="uid://dc8sod06feafh" path="res://scripts/values/float/manual_float.gd" id="5_3rx28"]
+[ext_resource type="Script" uid="uid://b1o48vkwquyxs" path="res://scripts/values/node/manual_node.gd" id="6_m1kbb"]
+
+[node name="Spawner" type="Node2D"]
+script = ExtResource("1_4wbs5")
+
+[node name="Spawner" type="Node2D" parent="." node_paths=PackedStringArray("scene", "interval")]
+script = ExtResource("2_30a77")
+scene = NodePath("ManualPackedScene")
+interval = NodePath("ManualFloat")
+concurrent_spawn_limit = 1
+
+[node name="ManualPackedScene" type="Node" parent="Spawner"]
+script = ExtResource("3_p5s3f")
+response = ExtResource("4_e3f8v")
+metadata/_custom_type_script = "uid://b55vjdqvt4nkj"
+
+[node name="ManualFloat" type="Node" parent="Spawner"]
+script = ExtResource("5_3rx28")
+response = 20.0
+metadata/_custom_type_script = "uid://dc8sod06feafh"
+
+[node name="ManualNode" type="Node" parent="Spawner"]
+script = ExtResource("6_m1kbb")
+metadata/_custom_type_script = "uid://b1o48vkwquyxs"
