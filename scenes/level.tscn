@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bl4dgkdt8rexv"]
+[gd_scene load_steps=29 format=3 uid="uid://bl4dgkdt8rexv"]
 
 [ext_resource type="Script" uid="uid://cvqf1hrebc04p" path="res://scripts/bot.gd" id="1_h6wmr"]
 [ext_resource type="Script" uid="uid://ce0lih35lp5ov" path="res://scripts/bits/movemaster2d.gd" id="2_pqd0y"]
@@ -9,10 +9,14 @@
 [ext_resource type="Script" uid="uid://bxl20cm7r57lo" path="res://scripts/values/string/concat_string.gd" id="7_cmcjb"]
 [ext_resource type="Script" uid="uid://64djo1ycff7k" path="res://scripts/values/bit.gd" id="8_556r4"]
 [ext_resource type="Script" uid="uid://dh7uyas6k0ivv" path="res://scripts/bits/movebits/position2d.gd" id="9_7agi7"]
+[ext_resource type="Script" uid="uid://hg8o6oww1p4g" path="res://scripts/bits/value_modifier.gd" id="9_wu01b"]
+[ext_resource type="Script" uid="uid://cae7ohv2js782" path="res://scripts/values/float/modified_float.gd" id="10_3ies3"]
 [ext_resource type="Script" uid="uid://cf8yvwn7y5dxj" path="res://scripts/values/vector2/operation_vec2.gd" id="10_kih21"]
 [ext_resource type="Script" uid="uid://dpdrlpfc562ev" path="res://scripts/values/vector2/cast_vec2.gd" id="11_w3o6u"]
-[ext_resource type="Script" path="res://scripts/values/property.gd" id="12_2e2fo"]
+[ext_resource type="Script" uid="uid://bdjqjjp8vifaj" path="res://scripts/values/float/cast_float.gd" id="11_xy2fk"]
+[ext_resource type="Script" uid="uid://d7n7ctdl2nsg" path="res://scripts/values/property.gd" id="12_2e2fo"]
 [ext_resource type="Script" uid="uid://4ivi36601ppp" path="res://scripts/values/node/bit_node.gd" id="13_gur6y"]
+[ext_resource type="Script" uid="uid://b3pqxy3hkl2fo" path="res://scripts/values/float/constrained_float.gd" id="14_3ies3"]
 [ext_resource type="Script" uid="uid://bslmamakq2ao5" path="res://scripts/values/node/group_node.gd" id="14_v3why"]
 [ext_resource type="Script" uid="uid://cv1nebo3jeb7b" path="res://scripts/values/vector2/manual_vec2.gd" id="15_asl66"]
 [ext_resource type="Script" uid="uid://dhiqy1na7pbxt" path="res://scripts/values/vector2/lerp_vec2.gd" id="16_2jdvr"]
@@ -60,7 +64,7 @@ texture = SubResource("GradientTexture2D_sugp2")
 [node name="Stamina" type="Node" parent="Player"]
 script = ExtResource("4_wu01b")
 id = "Stamina"
-value = 0.0
+value = 300.0
 
 [node name="Label" type="Label" parent="Player"]
 offset_left = -25.0
@@ -91,6 +95,47 @@ metadata/_custom_type_script = "uid://64djo1ycff7k"
 script = ExtResource("6_xy2fk")
 response = NodePath("../../../../..")
 metadata/_custom_type_script = "uid://b1o48vkwquyxs"
+
+[node name="ValueModifierBit" type="Node" parent="Player" node_paths=PackedStringArray("target", "new_value")]
+script = ExtResource("9_wu01b")
+target = NodePath("LockFloat/StaminaMinused/StaminaValue/Value/Stamina")
+value_id = "Stamina"
+new_value = NodePath("LockFloat")
+constant = true
+metadata/_custom_type_script = "uid://hg8o6oww1p4g"
+
+[node name="LockFloat" type="Node" parent="Player/ValueModifierBit" node_paths=PackedStringArray("input", "minimum")]
+script = ExtResource("14_3ies3")
+input = NodePath("StaminaMinused")
+minimum = NodePath("0")
+
+[node name="StaminaMinused" type="Node" parent="Player/ValueModifierBit/LockFloat"]
+script = ExtResource("10_3ies3")
+operation = 1
+metadata/_custom_type_script = "uid://cae7ohv2js782"
+
+[node name="StaminaValue" type="Node" parent="Player/ValueModifierBit/LockFloat/StaminaMinused"]
+script = ExtResource("11_xy2fk")
+metadata/_custom_type_script = "uid://bdjqjjp8vifaj"
+
+[node name="Value" type="Node" parent="Player/ValueModifierBit/LockFloat/StaminaMinused/StaminaValue"]
+script = ExtResource("12_2e2fo")
+property = "value"
+metadata/_custom_type_script = "uid://d7n7ctdl2nsg"
+
+[node name="Stamina" type="Node" parent="Player/ValueModifierBit/LockFloat/StaminaMinused/StaminaValue/Value" node_paths=PackedStringArray("response")]
+script = ExtResource("6_xy2fk")
+response = NodePath("../../../../../../Stamina")
+metadata/_custom_type_script = "uid://b1o48vkwquyxs"
+
+[node name="1" type="Node" parent="Player/ValueModifierBit/LockFloat/StaminaMinused"]
+script = ExtResource("21_50fbu")
+response = 0.05
+metadata/_custom_type_script = "uid://dc8sod06feafh"
+
+[node name="0" type="Node" parent="Player/ValueModifierBit/LockFloat"]
+script = ExtResource("21_50fbu")
+metadata/_custom_type_script = "uid://dc8sod06feafh"
 
 [node name="Camera" type="Node2D" parent="." groups=["Camera"]]
 script = ExtResource("1_h6wmr")
@@ -178,7 +223,6 @@ script = ExtResource("21_50fbu")
 response = 5.0
 metadata/_custom_type_script = "uid://dc8sod06feafh"
 
-[node name="ManualNode" type="Node" parent="Spawner/Spawner" node_paths=PackedStringArray("response")]
+[node name="ManualNode" type="Node" parent="Spawner/Spawner"]
 script = ExtResource("6_xy2fk")
-response = NodePath("")
 metadata/_custom_type_script = "uid://b1o48vkwquyxs"

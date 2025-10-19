@@ -6,27 +6,12 @@
 [ext_resource type="Script" uid="uid://dw7w6pry2g435" path="res://scripts/bits/player_animator.gd" id="22_jscy8"]
 [ext_resource type="Script" uid="uid://chbr2ps15l74p" path="res://scripts/bits/add.gd" id="23_pm3ni"]
 
-[sub_resource type="Animation" id="Animation_jscy8"]
-resource_name = "test"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Panel:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.2831855]
-}
-
 [sub_resource type="Animation" id="Animation_pm3ni"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Panel:rotation")
+tracks/0/path = NodePath("StartScreen:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -35,25 +20,76 @@ tracks/0/keys = {
 "update": 0,
 "values": [0.0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("StartScreen:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("InputBlocker:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_tbgi4"]
+resource_name = "to_game"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("StartScreen:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, -648)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("InputBlocker:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_y6deb"]
 _data = {
 &"RESET": SubResource("Animation_pm3ni"),
-&"test": SubResource("Animation_jscy8")
+&"to_game": SubResource("Animation_tbgi4")
 }
 
 [node name="Main" type="Node" groups=["Main"]]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Panel" type="Panel" parent="CanvasLayer"]
+[node name="StartScreen" type="Panel" parent="CanvasLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button" type="Button" parent="CanvasLayer/Panel"]
+[node name="Button" type="Button" parent="CanvasLayer/StartScreen"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -62,27 +98,36 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Start"
 
-[node name="Animater" type="Node" parent="CanvasLayer/Panel/Button"]
+[node name="Animater" type="Node" parent="CanvasLayer/StartScreen/Button"]
 script = ExtResource("22_jscy8")
-animation = "test"
+animation = "to_game"
 
-[node name="AddNode" type="Node" parent="CanvasLayer/Panel/Button"]
+[node name="AddNode" type="Node" parent="CanvasLayer/StartScreen/Button"]
 script = ExtResource("23_pm3ni")
 
-[node name="ManualPackedScene" type="Node" parent="CanvasLayer/Panel/Button/AddNode"]
+[node name="ManualPackedScene" type="Node" parent="CanvasLayer/StartScreen/Button/AddNode"]
 script = ExtResource("15_jkv2x")
 response = ExtResource("4_tbgi4")
 metadata/_custom_type_script = "uid://b55vjdqvt4nkj"
 
-[node name="GroupNode" type="Node" parent="CanvasLayer/Panel/Button/AddNode"]
+[node name="GroupNode" type="Node" parent="CanvasLayer/StartScreen/Button/AddNode"]
 script = ExtResource("12_eb6dy")
 group_name = "Main"
 metadata/_custom_type_script = "uid://bslmamakq2ao5"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer"]
+[node name="InputBlocker" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer" groups=["Animator"]]
 libraries = {
 &"": SubResource("AnimationLibrary_y6deb")
 }
 
-[connection signal="pressed" from="CanvasLayer/Panel/Button" to="CanvasLayer/Panel/Button/Animater" method="animate"]
-[connection signal="pressed" from="CanvasLayer/Panel/Button" to="CanvasLayer/Panel/Button/AddNode" method="add"]
+[connection signal="pressed" from="CanvasLayer/StartScreen/Button" to="CanvasLayer/StartScreen/Button/Animater" method="animate"]
+[connection signal="pressed" from="CanvasLayer/StartScreen/Button" to="CanvasLayer/StartScreen/Button/AddNode" method="add"]

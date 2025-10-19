@@ -7,10 +7,16 @@ class_name ValueModifierBit extends Bit
 @export var value_id:String
 ## The value to change it to.
 @export var new_value:Value
+## Whether to constantly modify.
+@export var constant := false
 
 ## For signals that are STUPID.
 func modify_val(_value):
 	modify()
+
+func _process(_delta: float) -> void:
+	if constant:
+		modify()
 
 ## Can be attached to signals >:)
 func modify():
@@ -20,12 +26,12 @@ func modify():
 		
 		if target_node is Bot:
 			if target_node is ValueBit:
-				if target_node.id == value_id:
-					target_node.value = next_value
-					return
+				target_node.value = next_value
+				return 2
 			
 			for child in target_node.get_children():
 				if child is ValueBit:
 					if child.id == value_id:
 						child.value = next_value
-						return
+						return 1
+	return -1
